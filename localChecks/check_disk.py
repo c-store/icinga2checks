@@ -12,7 +12,6 @@
 # tmpfs mounted on: /run
 # /dev/dm-0 mounted on: /
 # /dev/sda1 mounted on: /boot
-# 192.168.175.1:/mnt/freenas/backup mounted on: /mnt/backup
 #
 # perfdata:
 # /boot_BlocksAvailable	187,356.00
