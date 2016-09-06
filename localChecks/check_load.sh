@@ -3,6 +3,7 @@
 # for nagios style monitoring systems
 #
 # copyright C-Store 2015
+# Author Mattis Haase
 #
 # usage:        check_load.sh loadWarn%OneMin loadCrit%OneMin \
 #               loadWarn%FiveMin loadCrit%FiveMin loadWarn%FiveteenMin loadCrit%FiveteenMin
