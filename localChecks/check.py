@@ -161,6 +161,17 @@ def check_load_or_memory(i_warning, i_critical, s_command):
     return s_output
 
 def check_disk(i_warning, i_critical, s_partition):
+    """
+    Checks for disk stats
+    
+    Gets:
+        i_warning: Warning Threshold
+        i_critical: Critical Threshold
+        s_partition: partition that should be used to trigger WARNING/CRITICAL
+    
+    Returns:
+        check output including perfdata
+    """
     test_int(i_warning, i_critical)
     test_string(s_partition)
     
