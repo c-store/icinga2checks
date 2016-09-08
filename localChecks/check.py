@@ -219,33 +219,60 @@ def check_disk(i_warning, i_critical, s_partition):
     
     return s_output
 
+def check_network(i_warning, i_critical):
+    test_int(i_warning, i_critical)
+    
+    s_perfdata    = ''
+    s_output      = ''
+    i_max         = 0
+    s_maxdesc     = ''
+    d_io_counters = psutil.net_io_counters(pernic=True)
+    
+    for s_device, nt_counters in d_io_counters.items():
+        d_counters = nt_counters._asdict()
+        # add all io_counters to perfdata
+        for key, value in d_counters.items():
+            if 'err' in key or 'drop' in key:
+                if value > i_max: 
+                    i_max = value
+                    s_maxdesc = '{} has {} {} packets.'.format(s_device, value, key)
+            s_perfdata = add_perfdata(s_perfdata, s_device, key, value)
+            
+    s_output = check_status(i_warning, i_critical, i_max)
+    
+    if not 'OK' in s_output: s_output += s_maxdesc
+    
+    s_output += ' | {}'.format(s_perfdata)
+    
+    return s_output
+
 def main():
     parser = argparse.ArgumentParser(description='This check combines memory, load and disk checks.')
     parser.add_argument(
         '-w',
         '--warn',
-        help='integer Percentage of RAM/CPU/Disk usage that leads to WARNING state. Default 85.',
+        help='For cpu|memory|disk Percentage usage. For net number of dropped/error packets. Default 85',
         default = 85,
         type = int
     )
     parser.add_argument(
         '-c',
         '--crit',
-        help='integer Percentage of RAM/CPU/Disk usage that leads to CRITICAL state. Default 95.',
+        help='For cpu|memory|disk Percentage usage. For network number of dropped/error packets. Default 95',
         default = 95,
         type = int
     )
     parser.add_argument(
         '-C',
         '--command',
-        help='<disk|cpu|memory>',
+        help='<disk|cpu|memory|network> Default memory.',
         default = 'memory',
         type = str
     )
     parser.add_argument(
         '-p',
         '--partition',
-        help='partition that should trigger WARNING and CRITICAL states',
+        help='partition that should trigger WARNING and CRITICAL states. Default /',
         default = '/',
         type = str
     )
@@ -254,5 +281,7 @@ def main():
         print(check_load_or_memory(arguments.warn, arguments.crit, arguments.command))
     if arguments.command == 'disk':
         print(check_disk(arguments.warn, arguments.crit, arguments.partition))
+    if arguments.command == 'network':
+        print(check_network(arguments.warn, arguments.crit))
 if __name__ == '__main__':
     main()
