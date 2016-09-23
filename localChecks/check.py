@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-This check combines memory, load and disk checks.
+This check combines memory, load, disk and network checks.
 
 This file is under Apache 2.0 License
 

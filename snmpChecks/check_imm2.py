@@ -83,11 +83,11 @@ def getOID(property):
 
 def performCheck(oid, user, authPasswd, privPasswd, ip, level, authAlgo, privAlgo):
     if level == "authPriv":
-        output = check_output(['snmpwalk', '-v', '3', '-l', 'authPriv', '-u', user, '-a', authAlgo, '-A', authPasswd, '-x', privAlgo, '-X', privPasswd, ip, oid])
+        output = check_output(['snmpwalk', '-v', '3', '-l', 'authPriv', '-u', user, '-a', authAlgo, '-A', authPasswd, '-x', privAlgo, '-X', privPasswd, ip, oid, '-t', '10'])
     elif level == 'authNoPriv':
-        output = check_output(['snmpwalk', '-v', '3', '-l', 'authNoPriv', '-u', user, '-a', authAlgo, '-A', authPasswd, ip, oid])
+        output = check_output(['snmpwalk', '-v', '3', '-l', 'authNoPriv', '-u', user, '-a', authAlgo, '-A', authPasswd, ip, oid, '-t', '10'])
     elif level == 'noAuthNoPriv':
-        output = check_output(['snmpwalk', '-v', '3', '-l', 'noAuthNoPriv', '-u', user, ip, oid])
+        output = check_output(['snmpwalk', '-v', '3', '-l', 'noAuthNoPriv', '-u', user, ip, oid, '-t', '10'])
     return output.decode('utf-8').replace('"', '').split('\n')
 
 # gets: output of snmpwalk
