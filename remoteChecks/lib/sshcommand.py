@@ -34,3 +34,14 @@ class SSHCommand:
         
         sOutput = check_output(['ssh'] + lCommand)
         return sOutput.decode('utf-8').split('\n')
+    
+    def get(self, user, hostname, command):
+        assert type(lCommand) is list, 'command must be a list'
+        assert type(s_user) is str, 'user must be a string'
+        assert type(s_hostname) is str, 'hostname must be a string'
+        for s_element in command: 
+            assert type(s_element) is str, 'elements of lCommand must be string'
+        
+        l_login = ['{}@{}'.format(user, hostname)]
+        s_output = check_output(['ssh'] + l_login + command)
+        return sOutput.decode('utf-8').split('\n')
