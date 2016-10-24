@@ -36,12 +36,12 @@ class SSHCommand:
         return sOutput.decode('utf-8').split('\n')
     
     def get(self, user, hostname, command):
-        assert type(lCommand) is list, 'command must be a list'
-        assert type(s_user) is str, 'user must be a string'
-        assert type(s_hostname) is str, 'hostname must be a string'
-        for s_element in command: 
-            assert type(s_element) is str, 'elements of lCommand must be string'
+        assert type(command) is list, 'command must be a list'
+        assert type(user) is str, 'user must be a string'
+        assert type(hostname) is str, 'hostname must be a string'
+        for element in command: 
+            assert type(element) is str, 'elements of lCommand must be string'
         
-        l_login = ['{}@{}'.format(user, hostname)]
-        s_output = check_output(['ssh'] + l_login + command)
-        return sOutput.decode('utf-8').split('\n')
+        login = ['{}@{}'.format(user, hostname)]
+        output = check_output(['ssh'] + login + command)
+        return output.decode('utf-8').split('\n')

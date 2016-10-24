@@ -15,14 +15,15 @@ def check(username, hostname):
     SSH = lib.sshcommand.SSHCommand
     command = ['sudo', 'smbstatus', '-b']
     
-    output = SSH.get(SSHCommand, user = username, hostname = hostname, command = command)
+    output = SSH.get(SSH, user = username, hostname = hostname, command = command)
     return output
 
 def parse_output(output):
-    ipv4_regex      = re.compile('\b(? :[0-9]{1,3}\.){3}[0-9]{1,3}\b')
+    ipv4_regex      = re.compile('(?:[0-9]{1,3}\.){3}[0-9]{1,3}')
     ipv6_regex      = re.compile('(?<![:.\w])(?:[A-F0-9]{1,4}:){7}[A-F0-9]{1,4}(?![:.\w])')
     number_of_users = {}
-    for entry in l_output[3:]:
+    for entry in output[4:]:
+        if not entry: continue
         entry_elements = entry.split()
         address = re.search(ipv4_regex, entry_elements[4])
         if not address:
@@ -38,7 +39,7 @@ def print_result(number_of_users):
     output = 'OK - check_smb | {}'
     perfdata = ''
     total_users = 0
-    for address, usercount in number_of_users.iteritems():
+    for address, usercount in number_of_users.items():
         total_users += usercount
         perfdata += ' {}={}'.format(address, usercount)
     perfdata +=' total_users={}'.format(total_users)
