@@ -12,10 +12,10 @@ from sys import exit
 import lib.sshcommand
 
 def check(username, hostname):
-    SSH = lib.sshcommand.SSHCommand()
-    command = ['smbstatus', '-b']
+    SSH = lib.sshcommand.SSHCommand
+    command = ['sudo', 'smbstatus', '-b']
     
-    output = SSH.get(user = username, hostname = hostname, command = command)
+    output = SSH.get(SSHCommand, user = username, hostname = hostname, command = command)
     return output
 
 def parse_output(output):
