@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # check_load.sh - Shell script that checks load, intended
 # for nagios style monitoring systems
 #
@@ -23,11 +23,19 @@ FiveMinLoadCrit=${4:-$DefaultCrit}
 FiveteenMinLoadWarn=${5:-$DefaultWarn}
 FiveteenMinLoadCrit=${6:-$DefaultCrit}
 
-OneMinLoad=$(cat /proc/loadavg | sed -r 's/\ +/\ /g' | cut -d \  -f 1)
-FiveMinLoad=$(cat /proc/loadavg | sed -r 's/\ +/\ /g' | cut -d \  -f 2)
-FiveteenMinLoad=$(cat /proc/loadavg | sed -r 's/\ +/\ /g' | cut -d \  -f 3)
+OS=$(uname -s)
 
-numberOfCores=$(grep -c processor /proc/cpuinfo)
+if [ "${OS}" = "Linux" ]; then
+	OneMinLoad=$(cat /proc/loadavg | sed -r 's/\ +/\ /g' | cut -d \  -f 1)
+	FiveMinLoad=$(cat /proc/loadavg | sed -r 's/\ +/\ /g' | cut -d \  -f 2)
+	FiveteenMinLoad=$(cat /proc/loadavg | sed -r 's/\ +/\ /g' | cut -d \  -f 3)
+	numberOfCores=$(grep -c processor /proc/cpuinfo)
+elif [ "${OS}" = "FreeBSD" ]; then
+	OneMinLoad=$(sysctl -n vm.loadavg | cut -d" " -f 2)
+	FiveMinLoad=$(sysctl -n vm.loadavg | cut -d" " -f 3)
+	FiveteenMinLoad=$(sysctl -n vm.loadavg | cut -d" " -f 4)
+	numberOfCores=$(sysctl -n hw.ncpu)
+fi
 
 OneMinLoadpct=$(bc <<< "100*$OneMinLoad/$numberOfCores")
 FiveMinLoadpct=$(bc <<< "100*$FiveMinLoad/$numberOfCores")
